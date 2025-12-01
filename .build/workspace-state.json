@@ -1,0 +1,64 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "cocoalumberjack",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
+          "name" : "CocoaLumberjack"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "a9ed4b6f9bdedce7d77046f43adfb8ce1fd54114",
+            "version" : "3.9.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "CocoaLumberjack"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "fmdb",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/ccgus/fmdb.git",
+          "name" : "FMDB"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "1227a3fa2b9916bfd75fe380eb45cd210e69e251",
+            "version" : "2.7.12"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "fmdb"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-log",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/apple/swift-log",
+          "name" : "swift-log"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "ce592ae52f982c847a4efc0dd881cc9eb32d29f2",
+            "version" : "1.6.4"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-log"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

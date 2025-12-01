@@ -27,12 +27,17 @@ let package = Package(
     ],
     dependencies: [
         // Core模块依赖
-        .package(url: "https://github.com/swisspol/GCDWebServer.git", from: "3.5.4"),
+        // 注意：以下依赖不支持 SPM，需要手动集成或使用 CocoaPods：
+        // - GCDWebServer: 不支持 SPM，需要手动添加或使用 CocoaPods
+        // - SocketRocket: 不支持 SPM，需要手动添加或使用 CocoaPods
+        // 如果仅使用 SPM，这些功能将不可用
+        
+        // .package(url: "https://github.com/swisspol/GCDWebServer.git", from: "3.5.4"), // 不支持 SPM
         .package(url: "https://github.com/ccgus/fmdb.git", from: "2.7.5"),
         
         // Foundation模块依赖
-        .package(url: "https://github.com/facebookarchive/SocketRocket.git", from: "0.6.0"),
-        .package(url: "https://github.com/Mantle/Mantle.git", from: "2.2.0"),
+        // .package(url: "https://github.com/facebookarchive/SocketRocket.git", from: "0.6.0"), // 不支持 SPM
+        // .package(url: "https://github.com/Mantle/Mantle.git", from: "2.2.0"), // 不支持 SPM
         
         // Logger模块依赖
         .package(url: "https://github.com/CocoaLumberjack/CocoaLumberjack.git", from: "3.7.4"),
@@ -54,11 +59,12 @@ let package = Package(
         ),
         
         // MARK: - Foundation模块
+        // 注意：SocketRocket 和 Mantle 不支持 SPM，需要手动集成
         .target(
             name: "DoraemonKitFoundation",
             dependencies: [
-                .product(name: "SocketRocket", package: "SocketRocket"),
-                .product(name: "Mantle", package: "Mantle"),
+                // .product(name: "SocketRocket", package: "SocketRocket"), // 不支持 SPM
+                // .product(name: "Mantle", package: "Mantle"), // 不支持 SPM
             ],
             path: "iOS/DoKit/Classes/Foundation",
             sources: ["."],
@@ -89,10 +95,13 @@ let package = Package(
         ),
         
         // MARK: - Core模块
+        // 注意：GCDWebServer 需要手动集成，因为其不支持 SPM
+        // 如果使用 CocoaPods，GCDWebServer 会自动包含
+        // 如果仅使用 SPM，需要手动添加 GCDWebServer 源码或 framework
         .target(
             name: "DoraemonKitCore",
             dependencies: [
-                .product(name: "GCDWebServer", package: "GCDWebServer"),
+                // .product(name: "GCDWebServer", package: "GCDWebServer"), // 不支持 SPM
                 .product(name: "FMDB", package: "fmdb"),
             ],
             path: "iOS/DoraemonKit/Src/Core",

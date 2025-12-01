@@ -166,17 +166,53 @@ if #available(iOS 13.0, *) {
 
 ⚠️ **重要**：DoraemonKit 包含一些 hook 操作，可能会污染线上代码。请确保只在 Debug 环境中集成。
 
-### 2. 外部依赖
+### 2. SPM 限制和已知问题
+
+⚠️ **重要限制**：由于某些依赖库不支持 Swift Package Manager，SPM 版本的功能有限制：
+
+#### 不支持 SPM 的依赖
+
+以下依赖库不支持 SPM，导致相关功能在纯 SPM 集成时不可用：
+
+- **GCDWebServer**: 文件同步功能需要此库，但不支持 SPM
+- **SocketRocket**: WebSocket 功能需要此库，但不支持 SPM  
+- **Mantle**: 某些数据模型功能需要此库，但不支持 SPM
+
+#### 解决方案
+
+**方案 1：使用 CocoaPods（推荐）**
+
+如果您的项目使用 CocoaPods，建议使用 CocoaPods 方式集成，这样可以获得完整功能：
+
+```ruby
+pod 'DoraemonKit/Core', '~> 3.0.4', :configurations => ['Debug']
+```
+
+**方案 2：混合使用 SPM + CocoaPods**
+
+可以在使用 SPM 的同时，通过 CocoaPods 添加这些不支持 SPM 的依赖：
+
+```ruby
+pod 'GCDWebServer', '~> 3.5.4'
+pod 'SocketRocket', '~> 0.6.0'
+pod 'Mantle', '~> 2.2.0'
+```
+
+**方案 3：手动集成**
+
+手动下载这些库的源码并添加到项目中。
+
+### 3. 外部依赖
 
 某些模块需要额外的依赖：
 
-- **DoraemonKitLogger**: 需要 `CocoaLumberjack`
+- **DoraemonKitLogger**: 需要 `CocoaLumberjack` ✅ 支持 SPM
 - **DoraemonKitLoad**: 需要 `DoraemonLoadAnalyze.framework`（需要手动添加到项目）
 - **DoraemonKitWeex**: 需要 `WeexSDK` 和 `WXDevtool`
 - **DoraemonKitDatabase**: 需要 `YYDebugDatabase`
 - **DoraemonKitMLeaksFinder**: 需要 `FBRetainCycleDetector`
 
-### 3. Framework 依赖处理
+### 4. Framework 依赖处理
 
 对于需要 Framework 的模块（如 `DoraemonKitLoad`），您需要：
 
@@ -184,13 +220,22 @@ if #available(iOS 13.0, *) {
 2. 在项目设置中链接 Framework
 3. 或者使用 `binaryTarget` 方式（需要预先打包）
 
-### 4. 资源文件
+### 5. 资源文件
 
 资源文件会自动包含在相应的模块中。确保在使用时通过正确的 Bundle 访问资源。
 
-### 5. 编译设置
+### 6. 编译设置
 
 某些模块使用了特定的编译标志（如 `-Wall`, `-Wextra`），这可能会影响编译警告级别。
+
+### 7. SPM 功能限制
+
+由于依赖限制，SPM 版本可能无法使用以下功能：
+- 文件同步功能（需要 GCDWebServer）
+- WebSocket 相关功能（需要 SocketRocket）
+- 某些数据模型功能（需要 Mantle）
+
+如果您的项目需要这些功能，建议使用 CocoaPods 方式集成。
 
 ## 迁移指南
 
@@ -261,6 +306,70 @@ let resourceURL = bundle.url(forResource: "DoraemonKit", withExtension: "bundle"
 ### Q: 如何禁用某些功能？
 
 A: 只添加需要的模块即可。SPM 的模块化设计允许您按需选择功能。
+
+### Q: 如何解决 "could not be resolved" 或 "package manifest cannot be accessed" 错误？
+
+A: 如果遇到依赖解析失败的问题，请按以下步骤操作：
+
+1. **清理 Xcode 缓存**：
+   - 在 Xcode 中，选择 `File` > `Packages` > `Reset Package Caches`
+   - 或者删除 `~/Library/Developer/Xcode/DerivedData` 目录
+
+2. **手动解析依赖**：
+   - 在 Xcode 中，选择 `File` > `Packages` > `Resolve Package Versions`
+   - 或者使用命令行：`xcodebuild -resolvePackageDependencies`
+
+3. **检查网络连接**：
+   - 确保可以访问 GitHub
+   - 如果使用代理，确保 Xcode 配置了正确的代理设置
+
+4. **检查仓库地址**：
+   - 确保使用正确的仓库地址：`https://github.com/hdheyou/DoKit.git`
+   - 如果是私有仓库，确保已配置正确的认证信息
+
+5. **删除并重新添加依赖**：
+   - 在 Xcode 项目设置中，删除有问题的包依赖
+   - 清理项目（`Product` > `Clean Build Folder`）
+   - 重新添加包依赖
+
+6. **检查 Package.resolved 文件**：
+   - 确保 `Package.resolved` 文件已提交到版本控制
+   - 如果文件损坏，可以删除后让 Xcode 重新生成
+
+7. **使用命令行验证**：
+   ```bash
+   cd /path/to/your/project
+   swift package resolve
+   ```
+
+### Q: 如何解决 "unexpectedly did not find the new dependency in the package graph" 错误？
+
+A: 这个错误通常表示 SPM 无法正确解析依赖关系。解决方法：
+
+1. **确保 Package.swift 在仓库根目录**：
+   - 检查远程仓库是否包含 `Package.swift` 文件
+   - 确保文件在仓库的根目录，而不是子目录中
+
+2. **检查分支和标签**：
+   - 如果使用分支，确保分支名称正确（如 `main`）
+   - 如果使用版本，确保标签存在且格式正确
+
+3. **清理并重建**：
+   ```bash
+   # 删除 DerivedData
+   rm -rf ~/Library/Developer/Xcode/DerivedData
+   
+   # 在项目目录中
+   rm -rf .build
+   rm Package.resolved
+   
+   # 重新解析
+   swift package resolve
+   ```
+
+4. **检查依赖版本要求**：
+   - 确保 `Package.swift` 中的依赖版本要求正确
+   - 检查是否有版本冲突
 
 ## 技术支持
 
