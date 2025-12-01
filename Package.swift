@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "DoraemonKit",
+    name: "DoKit",
     platforms: [
         .iOS(.v9)
     ],

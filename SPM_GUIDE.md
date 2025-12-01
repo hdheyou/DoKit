@@ -39,14 +39,22 @@ DoraemonKit 通过 SPM 提供了以下模块：
 
 1. 打开您的 Xcode 项目
 2. 选择 `File` > `Add Packages...`
-3. 输入仓库地址：`https://github.com/didi/DoraemonKit.git`
-4. 选择版本或分支
+3. 输入仓库地址：`https://github.com/hdheyou/DoKit.git`
+4. 选择版本或分支：
+   - **使用分支**：选择 `Branch: main`（推荐，获取最新代码）
+   - **使用版本**：如果仓库有版本标签，可以选择对应版本
 5. 选择需要的产品（Products）
 
 ### 2. 基本集成（仅核心功能）
 
 在 `Package.swift` 或 Xcode 包依赖中，选择以下产品：
 - `DoraemonKit`（包含所有基础模块）
+
+**重要提示**：包名是 `DoKit`，不是 `DoraemonKit`。在引用时使用：
+```swift
+.product(name: "DoraemonKit", package: "DoKit")  // ✅ 正确
+.product(name: "DoraemonKit", package: "DoraemonKit")  // ❌ 错误
+```
 
 ### 3. 在代码中使用
 
@@ -77,24 +85,44 @@ import DoraemonKit
 
 ### 最小化集成（仅核心功能）
 
+在 `Package.swift` 中添加依赖：
+
 ```swift
 dependencies: [
-    .product(name: "DoraemonKit", package: "DoraemonKit")
+    .package(url: "https://github.com/hdheyou/DoKit.git", branch: "main")
+],
+targets: [
+    .target(
+        name: "YourApp",
+        dependencies: [
+            .product(name: "DoraemonKit", package: "DoKit")
+        ]
+    )
 ]
 ```
 
 ### 完整集成（包含所有可选模块）
 
+在 `Package.swift` 中添加依赖：
+
 ```swift
 dependencies: [
-    .product(name: "DoraemonKit", package: "DoraemonKit"),
-    .product(name: "DoraemonKitLogger", package: "DoraemonKit"),
-    .product(name: "DoraemonKitGPS", package: "DoraemonKit"),
-    .product(name: "DoraemonKitLoad", package: "DoraemonKit"),
-    .product(name: "DoraemonKitWeex", package: "DoraemonKit"),
-    .product(name: "DoraemonKitDatabase", package: "DoraemonKit"),
-    .product(name: "DoraemonKitMLeaksFinder", package: "DoraemonKit"),
-    .product(name: "DoraemonKitMultiControl", package: "DoraemonKit"),
+    .package(url: "https://github.com/hdheyou/DoKit.git", branch: "main")
+],
+targets: [
+    .target(
+        name: "YourApp",
+        dependencies: [
+            .product(name: "DoraemonKit", package: "DoKit"),
+            .product(name: "DoraemonKitLogger", package: "DoKit"),
+            .product(name: "DoraemonKitGPS", package: "DoKit"),
+            .product(name: "DoraemonKitLoad", package: "DoKit"),
+            .product(name: "DoraemonKitWeex", package: "DoKit"),
+            .product(name: "DoraemonKitDatabase", package: "DoKit"),
+            .product(name: "DoraemonKitMLeaksFinder", package: "DoKit"),
+            .product(name: "DoraemonKitMultiControl", package: "DoKit"),
+        ]
+    )
 ]
 ```
 
@@ -104,9 +132,17 @@ dependencies: [
 
 ```swift
 dependencies: [
-    .product(name: "DoraemonKit", package: "DoraemonKit"),
-    .product(name: "DoraemonKitLogger", package: "DoraemonKit"),  // 如果需要日志功能
-    .product(name: "DoraemonKitGPS", package: "DoraemonKit"),     // 如果需要GPS模拟
+    .package(url: "https://github.com/hdheyou/DoKit.git", branch: "main")
+],
+targets: [
+    .target(
+        name: "YourApp",
+        dependencies: [
+            .product(name: "DoraemonKit", package: "DoKit"),
+            .product(name: "DoraemonKitLogger", package: "DoKit"),  // 如果需要日志功能
+            .product(name: "DoraemonKitGPS", package: "DoKit"),     // 如果需要GPS模拟
+        ]
+    )
 ]
 ```
 
@@ -253,21 +289,33 @@ pod 'DoraemonKit/WithGPS', '~> 3.0.4', :configurations => ['Debug']
 
 在 Xcode 中添加包依赖，或使用 `Package.swift`：
 
+**方式 1：使用分支（推荐，获取最新代码）**
+
 ```swift
 dependencies: [
-    .package(url: "https://github.com/didi/DoraemonKit.git", from: "3.0.4")
+    .package(url: "https://github.com/hdheyou/DoKit.git", branch: "main")
 ],
 targets: [
     .target(
         name: "YourApp",
         dependencies: [
-            .product(name: "DoraemonKit", package: "DoraemonKit"),
-            .product(name: "DoraemonKitLogger", package: "DoraemonKit"),
-            .product(name: "DoraemonKitGPS", package: "DoraemonKit"),
+            .product(name: "DoraemonKit", package: "DoKit"),
+            .product(name: "DoraemonKitLogger", package: "DoKit"),
+            .product(name: "DoraemonKitGPS", package: "DoKit"),
         ]
     )
 ]
 ```
+
+**方式 2：使用版本号（需要仓库有对应的 git 标签）**
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/hdheyou/DoKit.git", from: "1.0.0") // 替换为实际的版本号
+],
+```
+
+**注意**：当前仓库可能没有版本标签，建议使用分支方式。
 
 ### 模块对应关系
 
