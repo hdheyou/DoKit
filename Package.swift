@@ -27,23 +27,13 @@ let package = Package(
     ],
     dependencies: [
         // Core模块依赖
-        // 注意：以下依赖不支持 SPM，需要手动集成或使用 CocoaPods：
-        // - GCDWebServer: 不支持 SPM，需要手动添加或使用 CocoaPods
-        // - SocketRocket: 不支持 SPM，需要手动添加或使用 CocoaPods
-        // 如果仅使用 SPM，这些功能将不可用
-        
-        // .package(url: "https://github.com/swisspol/GCDWebServer.git", from: "3.5.4"), // 不支持 SPM
         .package(url: "https://github.com/ccgus/fmdb.git", from: "2.7.5"),
-        
-        // Foundation模块依赖
-        // .package(url: "https://github.com/facebookarchive/SocketRocket.git", from: "0.6.0"), // 不支持 SPM
-        // .package(url: "https://github.com/Mantle/Mantle.git", from: "2.2.0"), // 不支持 SPM
         
         // Logger模块依赖
         .package(url: "https://github.com/CocoaLumberjack/CocoaLumberjack.git", from: "3.7.4"),
         
-        // Weex模块依赖（可选，需要根据实际情况调整）
-        // .package(url: "https://github.com/apache/incubator-weex.git", from: "0.28.0"),
+        // 注意：GCDWebServer、SocketRocket 和 Mantle 的源码已直接包含在项目中
+        // 位于 iOS/Dependencies/ 目录下，作为源码依赖使用
     ],
     targets: [
         // MARK: - CFoundation模块
@@ -59,19 +49,67 @@ let package = Package(
         ),
         
         // MARK: - Foundation模块
-        // 注意：SocketRocket 和 Mantle 不支持 SPM，需要手动集成
+        // 注意：SocketRocket 和 Mantle 的源码已直接包含在项目中
         .target(
             name: "DoraemonKitFoundation",
             dependencies: [
-                // .product(name: "SocketRocket", package: "SocketRocket"), // 不支持 SPM
-                // .product(name: "Mantle", package: "Mantle"), // 不支持 SPM
+                "SocketRocket",  // 使用本地源码依赖
+                "Mantle",  // 使用本地源码依赖
             ],
             path: "iOS/DoKit/Classes/Foundation",
             sources: ["."],
             publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("."),
+                .headerSearchPath("../../Dependencies/SocketRocket"),  // SocketRocket 源码路径
+                .headerSearchPath("../../Dependencies/Mantle/include"),  // Mantle 头文件路径
+                .headerSearchPath("../../Dependencies/Mantle"),  // Mantle 源码路径
                 .unsafeFlags(["-Wall", "-Wextra", "-Werror"])
+            ],
+            linkerSettings: [
+                .linkedFramework("Security"),
+                .linkedFramework("CFNetwork")
+            ]
+        ),
+        
+        // MARK: - SocketRocket 模块（源码依赖）
+        .target(
+            name: "SocketRocket",
+            dependencies: [],
+            path: "iOS/Dependencies/SocketRocket",
+            sources: ["."],
+            publicHeadersPath: ".",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("Internal"),
+                .headerSearchPath("Internal/Delegate"),
+                .headerSearchPath("Internal/IOConsumer"),
+                .headerSearchPath("Internal/Proxy"),
+                .headerSearchPath("Internal/RunLoop"),
+                .headerSearchPath("Internal/Security"),
+                .headerSearchPath("Internal/Utilities")
+            ],
+            linkerSettings: [
+                .linkedFramework("Foundation"),
+                .linkedFramework("Security"),
+                .linkedFramework("CFNetwork")
+            ]
+        ),
+        
+        // MARK: - Mantle 模块（源码依赖）
+        .target(
+            name: "Mantle",
+            dependencies: [],
+            path: "iOS/Dependencies/Mantle",
+            sources: [
+                ".",
+                "extobjc"
+            ],
+            publicHeadersPath: "include",
+            cSettings: [
+                .headerSearchPath("include"),
+                .headerSearchPath("extobjc/include"),
+                .headerSearchPath(".")
             ]
         ),
         
@@ -95,13 +133,11 @@ let package = Package(
         ),
         
         // MARK: - Core模块
-        // 注意：GCDWebServer 需要手动集成，因为其不支持 SPM
-        // 如果使用 CocoaPods，GCDWebServer 会自动包含
-        // 如果仅使用 SPM，需要手动添加 GCDWebServer 源码或 framework
+        // 注意：GCDWebServer 的源码已直接包含在项目中
         .target(
             name: "DoraemonKitCore",
             dependencies: [
-                // .product(name: "GCDWebServer", package: "GCDWebServer"), // 不支持 SPM
+                "GCDWebServer",  // 使用本地源码依赖
                 .product(name: "FMDB", package: "fmdb"),
             ],
             path: "iOS/DoraemonKit/Src/Core",
@@ -112,7 +148,27 @@ let package = Package(
             publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("."),
-                .headerSearchPath("../Resource")
+                .headerSearchPath("../Resource"),
+                .headerSearchPath("../../../Dependencies/GCDWebServer")  // GCDWebServer 源码路径
+            ]
+        ),
+        
+        // MARK: - GCDWebServer 模块（源码依赖）
+        .target(
+            name: "GCDWebServer",
+            dependencies: [],
+            path: "iOS/Dependencies/GCDWebServer",
+            sources: [
+                "Core",
+                "Requests",
+                "Responses"
+            ],
+            publicHeadersPath: ".",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("Core"),
+                .headerSearchPath("Requests"),
+                .headerSearchPath("Responses")
             ]
         ),
         
