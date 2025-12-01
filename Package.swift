@@ -112,7 +112,8 @@ let package = Package(
             sources: ["."],
             publicHeadersPath: ".",
             cSettings: [
-                .headerSearchPath("."),
+                .headerSearchPath("."),  // 当前目录（Foundation）
+                .headerSearchPath("DTO"),  // DTO 子目录
                 .unsafeFlags(["-Wall", "-Wextra", "-Werror"])
             ],
             linkerSettings: [
