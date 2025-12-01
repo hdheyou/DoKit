@@ -346,20 +346,34 @@ A: 确保：
 
 ### Q: 如何解决 "'DoraemonKit/DKQRCodeScanLogic.h' file not found" 等头文件找不到的错误？
 
-A: 这些头文件在 `DoraemonKitFoundation` 模块中。有两种解决方案：
+A: 这些头文件在 `DoraemonKitFoundation` 模块中，但为了兼容 CocoaPods 的使用方式，它们也被包含在 `DoraemonKit` 模块中。
 
-**方案 1：导入 DoraemonKit.h umbrella header（推荐）**
+**重要**：在 SPM 中，由于路径结构，这些头文件会暴露为：
+- `<DoraemonKit/Foundation/DKQRCodeScanLogic.h>`（注意有 Foundation 前缀）
+- `<DoraemonKit/Foundation/DTO/DKCommonDTOModel.h>`（DTO 子目录）
 
-在您的代码中，导入主头文件：
+**解决方案**：
+
+**方案 1：使用完整路径（推荐）**
+
+```objc
+#import <DoraemonKit/Foundation/DKQRCodeScanLogic.h>
+#import <DoraemonKit/Foundation/DKQRCodeScanView.h>
+#import <DoraemonKit/Foundation/DTO/DKCommonDTOModel.h>
+#import <DoraemonKit/Foundation/DKMultiControlProtocol.h>
+#import <DoraemonKit/Foundation/DKMultiControlStreamManager.h>
+```
+
+**方案 2：导入 DoraemonKit.h umbrella header**
+
 ```objc
 #import <DoraemonKit/DoraemonKit.h>
 ```
 
-这样会自动导入所有 Foundation 模块的头文件。
+这会自动导入所有 Foundation 模块的头文件。
 
-**方案 2：直接导入 DoraemonKitFoundation 模块**
+**方案 3：直接导入 DoraemonKitFoundation 模块**
 
-如果只需要特定的头文件，可以直接导入：
 ```objc
 #import <DoraemonKitFoundation/DKQRCodeScanLogic.h>
 #import <DoraemonKitFoundation/DKQRCodeScanView.h>
@@ -367,7 +381,10 @@ A: 这些头文件在 `DoraemonKitFoundation` 模块中。有两种解决方案�
 #import <DoraemonKitFoundation/DKMultiControlProtocol.h>
 ```
 
-**注意**：在 Swift 中，需要确保在 Target 的依赖中添加了 `DoraemonKitFoundation` 模块。
+**注意**：如果您的代码中使用的是 `#import <DoraemonKit/DKQRCodeScanLogic.h>`（没有 Foundation 前缀），需要：
+1. 修改为使用完整路径（方案 1），或
+2. 导入 umbrella header（方案 2），或
+3. 使用 DoraemonKitFoundation 模块（方案 3）
 
 ### Q: 如何解决 "unknown package 'DoraemonKit'" 错误？
 

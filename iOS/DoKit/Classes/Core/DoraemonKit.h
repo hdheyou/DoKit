@@ -21,17 +21,17 @@
 #import "DKTrayViewController.h"
 
 // Foundation module headers (re-exported for compatibility with CocoaPods)
-// Using relative paths since these files are in the same package
-#import "../Foundation/DKQRCodeScanLogic.h"
-#import "../Foundation/DKQRCodeScanView.h"
-#import "../Foundation/DKQRCodeScanViewController.h"
-#import "../Foundation/DKMultiControlProtocol.h"
-#import "../Foundation/DKMultiControlStreamManager.h"
-#import "../Foundation/DKWebSocketSession.h"
-#import "../Foundation/DTO/DKCommonDTOModel.h"
-#import "../Foundation/DTO/DKActionDTOModel.h"
-#import "../Foundation/DTO/DKDataRequestDTOModel.h"
-#import "../Foundation/DTO/DKDataResponseDTOModel.h"
-#import "../Foundation/DTO/DKLoginDataDTOModel.h"
-#import "../Foundation/NSURLSessionConfiguration+DoKit.h"
+// These headers are now included in the DoraemonKit module sources
+#import "DKQRCodeScanLogic.h"
+#import "DKQRCodeScanView.h"
+#import "DKQRCodeScanViewController.h"
+#import "DKMultiControlProtocol.h"
+#import "DKMultiControlStreamManager.h"
+#import "DKWebSocketSession.h"
+#import "DKCommonDTOModel.h"
+#import "DKActionDTOModel.h"
+#import "DKDataRequestDTOModel.h"
+#import "DKDataResponseDTOModel.h"
+#import "DKLoginDataDTOModel.h"
+#import "NSURLSessionConfiguration+DoKit.h"
 

@@ -232,7 +232,7 @@ let package = Package(
         // MARK: - 主库（聚合所有基础模块）
         // 注意：此库提供了DoKit的Swift接口，实际功能由DoraemonKitCore提供
         // 为了兼容 CocoaPods 的使用方式，此库重新导出了 Foundation 模块的头文件
-        // 通过 DoraemonKit.h umbrella header 和 headerSearchPath 配置
+        // 通过包含 Foundation 目录下的头文件，使它们可以通过 <DoraemonKit/...> 访问
         .target(
             name: "DoraemonKit",
             dependencies: [
@@ -241,17 +241,46 @@ let package = Package(
                 "DoraemonKitCFoundation",
                 "DoraemonKitEventSynthesize"
             ],
-            path: "iOS/DoKit/Classes/Core",
-            sources: ["DoKit.m", "DoKit.h", "DKTrayViewController.h", "DKTrayViewController.m", "DoraemonKit.h"],
-            resources: [
-                .process("../../Assets")
+            path: "iOS/DoKit/Classes",
+            sources: [
+                // Core 模块文件
+                "Core/DoKit.m",
+                "Core/DoKit.h",
+                "Core/DKTrayViewController.h",
+                "Core/DKTrayViewController.m",
+                "Core/DoraemonKit.h",
+                // Foundation 模块头文件（仅头文件，实现文件在 DoraemonKitFoundation 模块中）
+                // 注意：这些头文件会按照路径结构暴露，所以会暴露为 <DoraemonKit/Foundation/文件名.h>
+                // 如果需要 <DoraemonKit/文件名.h>，需要调整路径或使用符号链接
+                "Foundation/DKQRCodeScanLogic.h",
+                "Foundation/DKQRCodeScanView.h",
+                "Foundation/DKQRCodeScanViewController.h",
+                "Foundation/DKMultiControlProtocol.h",
+                "Foundation/DKMultiControlStreamManager.h",
+                "Foundation/DKWebSocketSession.h",
+                "Foundation/DTO/DKCommonDTOModel.h",
+                "Foundation/DTO/DKActionDTOModel.h",
+                "Foundation/DTO/DKDataRequestDTOModel.h",
+                "Foundation/DTO/DKDataResponseDTOModel.h",
+                "Foundation/DTO/DKLoginDataDTOModel.h",
+                "Foundation/NSURLSessionConfiguration+DoKit.h",
             ],
+            exclude: [
+                // 排除 Foundation 目录下的实现文件，它们属于 DoraemonKitFoundation 模块
+                "Foundation/*.m",
+                "Foundation/DTO/*.m"
+            ],
+            resources: [
+                .process("../Assets")
+            ],
+            // publicHeadersPath 设置为 "." 意味着 sources 中的头文件会按照它们的路径结构暴露
+            // 但由于我们需要它们暴露为 <DoraemonKit/文件名.h>，需要调整路径
             publicHeadersPath: ".",
             cSettings: [
-                .headerSearchPath("."),
+                .headerSearchPath("Core"),
+                .headerSearchPath("Foundation"),
+                .headerSearchPath("Foundation/DTO"),
                 .headerSearchPath("../Assets"),
-                .headerSearchPath("../Foundation"),  // 添加 Foundation 目录，使头文件可通过相对路径访问
-                .headerSearchPath("../Foundation/DTO"),  // 添加 DTO 子目录
                 .headerSearchPath("../../DoraemonKit/Src/Core")
             ]
         ),
