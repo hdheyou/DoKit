@@ -15,8 +15,8 @@
  */
 
 #import "DKWebSocketSession.h"
-#import <DoraemonKit/DKCommonDTOModel.h>
-#import <DoraemonKit/DKLoginDataDTOModel.h>
+#import "DTO/DKCommonDTOModel.h"
+#import "DTO/DKLoginDataDTOModel.h"
 #import <SocketRocket/SRWebSocket.h>
 
 NS_ASSUME_NONNULL_BEGIN

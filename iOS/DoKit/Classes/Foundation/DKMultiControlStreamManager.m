@@ -15,12 +15,12 @@
  */
 
 #import "DKMultiControlStreamManager.h"
-#import <DoraemonKit/DKActionDTOModel.h>
-#import <DoraemonKit/DKCommonDTOModel.h>
-#import <DoraemonKit/DKWebSocketSession.h>
-#import <DoraemonKit/DKDataRequestDTOModel.h>
-#import <DoraemonKit/DKDataResponseDTOModel.h>
-#import <DoraemonKit/DKMultiControlProtocol.h>
+#import "DTO/DKActionDTOModel.h"
+#import "DTO/DKCommonDTOModel.h"
+#import "DKWebSocketSession.h"
+#import "DTO/DKDataRequestDTOModel.h"
+#import "DTO/DKDataResponseDTOModel.h"
+#import "DKMultiControlProtocol.h"
 #if __has_include(<DoraemonKit/DoraemonMCCommandExcutor.h>)
 #define HAS_MULTI_CONTROL 1
 #import <DoraemonKit/DoraemonMCCommandExcutor.h>
