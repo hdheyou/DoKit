@@ -16,22 +16,10 @@
 
 #import <Foundation/Foundation.h>
 
-// Core headers
-#import "DoKit.h"
-#import "DKTrayViewController.h"
+NS_ASSUME_NONNULL_BEGIN
 
-// Foundation module headers (re-exported for compatibility with CocoaPods)
-// These wrapper headers are in Core directory and expose Foundation headers at module root level
-#import "DKQRCodeScanLogic.h"
-#import "DKQRCodeScanView.h"
-#import "DKQRCodeScanViewController.h"
-#import "DKMultiControlProtocol.h"
-#import "DKMultiControlStreamManager.h"
-#import "DKWebSocketSession.h"
-#import "DKCommonDTOModel.h"
-#import "DKActionDTOModel.h"
-#import "DKDataRequestDTOModel.h"
-#import "DKDataResponseDTOModel.h"
-#import "DKLoginDataDTOModel.h"
-#import "NSURLSessionConfiguration+DoKit.h"
+@interface DKMultiControlProtocol : NSURLProtocol
 
+@end
+
+NS_ASSUME_NONNULL_END

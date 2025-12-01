@@ -81,7 +81,7 @@ let package = Package(
             dependencies: [],
             path: "iOS/Dependencies/Mantle",
             sources: [".", "extobjc"],
-            publicHeadersPath: "include",
+            publicHeadersPath: "include",  // 头文件在 include 目录下，通过 <Mantle/Mantle.h> 访问
             cSettings: [
                 .headerSearchPath("include"),
                 .headerSearchPath("extobjc/include"),
@@ -160,7 +160,8 @@ let package = Package(
                 "DoraemonKitCore",
                 "DoraemonKitFoundation",
                 "DoraemonKitCFoundation",
-                "DoraemonKitEventSynthesize"
+                "DoraemonKitEventSynthesize",
+                "Mantle"  // Core 目录下的头文件需要 Mantle
             ],
             path: "iOS/DoKit/Classes",
             sources: [
@@ -169,20 +170,19 @@ let package = Package(
                 "Core/DKTrayViewController.h",
                 "Core/DKTrayViewController.m",
                 "Core/DoraemonKit.h",
-                // Foundation 模块头文件（仅头文件，实现文件在 DoraemonKitFoundation 模块中）
-                // 注意：这些头文件会按照路径结构暴露为 <DoraemonKit/Foundation/文件名.h>
-                "Foundation/DKQRCodeScanLogic.h",
-                "Foundation/DKQRCodeScanView.h",
-                "Foundation/DKQRCodeScanViewController.h",
-                "Foundation/DKMultiControlProtocol.h",
-                "Foundation/DKMultiControlStreamManager.h",
-                "Foundation/DKWebSocketSession.h",
-                "Foundation/DTO/DKCommonDTOModel.h",
-                "Foundation/DTO/DKActionDTOModel.h",
-                "Foundation/DTO/DKDataRequestDTOModel.h",
-                "Foundation/DTO/DKDataResponseDTOModel.h",
-                "Foundation/DTO/DKLoginDataDTOModel.h",
-                "Foundation/NSURLSessionConfiguration+DoKit.h",
+                // Foundation 模块头文件（复制到 Core 目录，暴露为 <DoraemonKit/文件名.h>）
+                "Core/DKQRCodeScanLogic.h",
+                "Core/DKQRCodeScanView.h",
+                "Core/DKQRCodeScanViewController.h",
+                "Core/DKMultiControlProtocol.h",
+                "Core/DKMultiControlStreamManager.h",
+                "Core/DKWebSocketSession.h",
+                "Core/DKCommonDTOModel.h",
+                "Core/DKActionDTOModel.h",
+                "Core/DKDataRequestDTOModel.h",
+                "Core/DKDataResponseDTOModel.h",
+                "Core/DKLoginDataDTOModel.h",
+                "Core/NSURLSessionConfiguration+DoKit.h",
             ],
             exclude: [
                 "Foundation/*.m",
@@ -191,11 +191,12 @@ let package = Package(
             resources: [.process("../Assets")],
             publicHeadersPath: ".",
             cSettings: [
-                .headerSearchPath("Core"),
-                .headerSearchPath("Foundation"),
-                .headerSearchPath("Foundation/DTO"),
+                .headerSearchPath("Core"),  // Core 目录（包含复制的头文件）
+                .headerSearchPath("Foundation"),  // 原始头文件目录（用于查找实现）
+                .headerSearchPath("Foundation/DTO"),  // DTO 子目录
                 .headerSearchPath("../Assets"),
-                .headerSearchPath("../../DoraemonKit/Src/Core")
+                .headerSearchPath("../../DoraemonKit/Src/Core"),
+                .headerSearchPath("../../Dependencies/Mantle/include")  // Mantle 头文件路径
             ]
         ),
         

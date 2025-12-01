@@ -16,22 +16,16 @@
 
 #import <Foundation/Foundation.h>
 
-// Core headers
-#import "DoKit.h"
-#import "DKTrayViewController.h"
+@class AVCaptureVideoPreviewLayer;
 
-// Foundation module headers (re-exported for compatibility with CocoaPods)
-// These wrapper headers are in Core directory and expose Foundation headers at module root level
-#import "DKQRCodeScanLogic.h"
-#import "DKQRCodeScanView.h"
-#import "DKQRCodeScanViewController.h"
-#import "DKMultiControlProtocol.h"
-#import "DKMultiControlStreamManager.h"
-#import "DKWebSocketSession.h"
-#import "DKCommonDTOModel.h"
-#import "DKActionDTOModel.h"
-#import "DKDataRequestDTOModel.h"
-#import "DKDataResponseDTOModel.h"
-#import "DKLoginDataDTOModel.h"
-#import "NSURLSessionConfiguration+DoKit.h"
+NS_ASSUME_NONNULL_BEGIN
 
+@interface DKQRCodeScanLogic : NSObject
+
+@property(nonatomic, nullable, copy) void (^completionBlock)(NSString *_Nullable decodedString);
+
+- (void)startScanQRCodeWithCompletionBlock:(void (^)(AVCaptureVideoPreviewLayer *_Nullable captureVideoPreviewLayer))completionBlock;
+
+@end
+
+NS_ASSUME_NONNULL_END
