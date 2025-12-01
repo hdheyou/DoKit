@@ -114,6 +114,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("."),  // 当前目录（Foundation）
                 .headerSearchPath("DTO"),  // DTO 子目录
+                .headerSearchPath("../../Dependencies/Mantle/include"),  // Mantle 头文件路径
                 .unsafeFlags(["-Wall", "-Wextra", "-Werror"])
             ],
             linkerSettings: [
