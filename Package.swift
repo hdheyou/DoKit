@@ -231,6 +231,8 @@ let package = Package(
         
         // MARK: - 主库（聚合所有基础模块）
         // 注意：此库提供了DoKit的Swift接口，实际功能由DoraemonKitCore提供
+        // 为了兼容 CocoaPods 的使用方式，此库重新导出了 Foundation 模块的头文件
+        // 通过 DoraemonKit.h umbrella header 和 headerSearchPath 配置
         .target(
             name: "DoraemonKit",
             dependencies: [
@@ -240,7 +242,7 @@ let package = Package(
                 "DoraemonKitEventSynthesize"
             ],
             path: "iOS/DoKit/Classes/Core",
-            sources: ["DoKit.m", "DoKit.h", "DKTrayViewController.h", "DKTrayViewController.m"],
+            sources: ["DoKit.m", "DoKit.h", "DKTrayViewController.h", "DKTrayViewController.m", "DoraemonKit.h"],
             resources: [
                 .process("../../Assets")
             ],
@@ -248,6 +250,8 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("."),
                 .headerSearchPath("../Assets"),
+                .headerSearchPath("../Foundation"),  // 添加 Foundation 目录，使头文件可通过相对路径访问
+                .headerSearchPath("../Foundation/DTO"),  // 添加 DTO 子目录
                 .headerSearchPath("../../DoraemonKit/Src/Core")
             ]
         ),

@@ -61,7 +61,7 @@ DoraemonKit 通过 SPM 提供了以下模块：
 #### Objective-C
 
 ```objc
-#import <DoraemonKit/DoraemonKit.h>
+#import <DoraemonKit/DoraemonKit.h>  // 导入主头文件，包含所有 Foundation 模块的头文件
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     #ifdef DEBUG
@@ -70,6 +70,8 @@ DoraemonKit 通过 SPM 提供了以下模块：
     return YES;
 }
 ```
+
+**注意**：如果需要使用 Foundation 模块的头文件（如 `DKQRCodeScanLogic.h`），请导入 `DoraemonKit.h` umbrella header，它会自动包含所有需要的头文件。
 
 #### Swift
 
@@ -342,6 +344,49 @@ A: 确保：
 2. 在 Target 的 "Frameworks, Libraries, and Embedded Content" 中添加了模块
 3. 使用了正确的 import 语句
 
+### Q: 如何解决 "'DoraemonKit/DKQRCodeScanLogic.h' file not found" 等头文件找不到的错误？
+
+A: 这些头文件在 `DoraemonKitFoundation` 模块中。有两种解决方案：
+
+**方案 1：导入 DoraemonKit.h umbrella header（推荐）**
+
+在您的代码中，导入主头文件：
+```objc
+#import <DoraemonKit/DoraemonKit.h>
+```
+
+这样会自动导入所有 Foundation 模块的头文件。
+
+**方案 2：直接导入 DoraemonKitFoundation 模块**
+
+如果只需要特定的头文件，可以直接导入：
+```objc
+#import <DoraemonKitFoundation/DKQRCodeScanLogic.h>
+#import <DoraemonKitFoundation/DKQRCodeScanView.h>
+#import <DoraemonKitFoundation/DKCommonDTOModel.h>
+#import <DoraemonKitFoundation/DKMultiControlProtocol.h>
+```
+
+**注意**：在 Swift 中，需要确保在 Target 的依赖中添加了 `DoraemonKitFoundation` 模块。
+
+### Q: 如何解决 "unknown package 'DoraemonKit'" 错误？
+
+A: 这个错误通常是因为包名使用错误。**重要**：包名是 `DoKit`，不是 `DoraemonKit`。
+
+**错误示例**：
+```swift
+.product(name: "DoraemonKit", package: "DoraemonKit")  // ❌ 错误
+```
+
+**正确示例**：
+```swift
+.product(name: "DoraemonKit", package: "DoKit")  // ✅ 正确
+```
+
+记住：
+- **产品名**（product name）：`"DoraemonKit"`、`"DoraemonKitLogger"` 等（保持不变）
+- **包名**（package name）：`"DoKit"`（根据仓库 URL 自动推断）
+
 ### Q: 资源文件找不到怎么办？
 
 A: 确保资源文件已正确包含在模块中。可以通过以下方式检查：
@@ -423,7 +468,7 @@ A: 这个错误通常表示 SPM 无法正确解析依赖关系。解决方法：
 
 如有问题，请访问：
 - 项目主页：https://www.dokit.cn
-- GitHub Issues：https://github.com/didi/DoraemonKit/issues
+- GitHub Issues：https://github.com/hdheyou/DoKit/issues
 
 ## 版本要求
 
