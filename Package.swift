@@ -170,7 +170,7 @@ let package = Package(
                 "Core/DKTrayViewController.h",
                 "Core/DKTrayViewController.m",
                 "Core/DoraemonKit.h",
-                // Foundation 模块头文件（复制到 Core 目录，暴露为 <DoraemonKit/文件名.h>）
+                // Foundation 模块头文件（在 Core 目录下，通过 publicHeadersPath: "Core" 暴露为 <DoraemonKit/文件名.h>）
                 "Core/DKQRCodeScanLogic.h",
                 "Core/DKQRCodeScanView.h",
                 "Core/DKQRCodeScanViewController.h",
@@ -189,14 +189,13 @@ let package = Package(
                 "Foundation/DTO/*.m"
             ],
             resources: [.process("../Assets")],
-            publicHeadersPath: ".",
+            publicHeadersPath: "Core",  // 头文件在 Core 目录下，暴露为 <DoraemonKit/文件名.h>
             cSettings: [
                 .headerSearchPath("Core"),  // Core 目录（包含复制的头文件）
                 .headerSearchPath("Foundation"),  // 原始头文件目录（用于查找实现）
                 .headerSearchPath("Foundation/DTO"),  // DTO 子目录
                 .headerSearchPath("../Assets"),
-                .headerSearchPath("../../DoraemonKit/Src/Core"),
-                .headerSearchPath("../../Dependencies/Mantle/include")  // Mantle 头文件路径
+                .headerSearchPath("../../DoraemonKit/Src/Core")
             ]
         ),
         
